@@ -20,8 +20,8 @@ const Dashboard: React.FC = () => {
   }, [])
 
   return (
-    <div className='p-2 mt-4 flex w-screen place-content-center'>
-      <div className='grid w-[80%]'>
+    <div className='default-padding flex w-screen place-content-center'>
+      <div className='grid'>
         <div className='flex w-[100%] justify-between'>
           <h1 className='text-2xl'>Dashboard</h1>
           <NewGameBtn />
