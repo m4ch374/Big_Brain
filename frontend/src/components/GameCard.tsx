@@ -19,6 +19,18 @@ const GameCard: React.FC<{ metaData: any }> = ({ metaData }) => {
     })
   }, [])
 
+  const getTotalTime = useCallback(() => {
+    if (!data?.questions) {
+      return 0
+    }
+
+    if (data.questions.length === 0) {
+      return 0
+    }
+
+    return data.questions.map((q: any) => parseInt(q.timeLimit)).reduce((acc: number, curr: number) => acc + curr)
+  }, [data])
+
   useEffect(() => {
     const result = Fetcher.get(QUIZ(metaData.id))
       .withLocalStorageToken()
@@ -38,7 +50,7 @@ const GameCard: React.FC<{ metaData: any }> = ({ metaData }) => {
           <div className='p-2'>
             <h1 className='text-xl'>Game: {metaData.name}</h1>
             <h3>Questions: {data?.questions ? data.questions.length : 0}</h3>
-            <h3>Total time: {data?.questions?.length ? '1' : '0'}</h3>
+            <h3>{`Total time: ${getTotalTime()}`}</h3>
           </div>
 
           <div className='place-self-end pr-3 pb-2 flex gap-3'>

@@ -39,6 +39,14 @@ const EditQuiz: React.FC = () => {
     })
   }, [])
 
+  const getQuestionId = useCallback(() => {
+    if (questions.length === 0) {
+      return 0
+    }
+
+    return Math.max(...questions.map((q: any) => parseInt(q.id))) + 1
+  }, [quizData, questions])
+
   const submitForm = useCallback((e: any) => {
     e.preventDefault()
 
@@ -94,7 +102,7 @@ const EditQuiz: React.FC = () => {
 
       <div className='flex justify-between mt-4'>
         <h2 className='text-xl font-bold mt-3'>Questions</h2>
-        <Link to={`/question/${quizId}/${quizData?.questions?.length + 1}`} aria-label='Add question' className='place-self-center'>
+        <Link to={`/question/${quizId}/${getQuestionId()}`} aria-label='Add question' className='place-self-center'>
           <Plus />
         </Link>
       </div>
