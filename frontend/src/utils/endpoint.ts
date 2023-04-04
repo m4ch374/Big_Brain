@@ -6,3 +6,9 @@ export const REGISTER = '/admin/auth/register'
 export const LOGIN = '/admin/auth/login'
 
 export const LOGOUT = '/admin/auth/logout'
+
+export const QUIZZES = '/admin/quiz'
+
+export const NEW_QUIZ = '/admin/quiz/new'
+
+export const QUIZ = (id: string) => '/admin/quiz/' + id
