@@ -21,8 +21,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className='default-padding flex w-screen place-content-center'>
-      <div className='grid'>
-        <div className='flex w-[100%] justify-between'>
+      <div className='grid min-w-[250px] w-[70%]'>
+        <div className='flex w-full justify-between'>
           <h1 className='text-2xl'>Dashboard</h1>
           <NewGameBtn />
         </div>
