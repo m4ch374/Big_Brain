@@ -3,26 +3,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LOGIN, REGISTER } from '../utils/endpoint';
 import Fetcher from '../utils/fetcher';
 
-const AuthCard: React.FC<{isLogin: boolean}> = ({ isLogin }) => {
+interface IElements extends HTMLFormElement {
+  email: HTMLInputElement,
+  password: HTMLInputElement,
+  usrName?: HTMLInputElement,
+}
+
+const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
   const navigate = useNavigate()
   const [errorMsg, setErrorMsg] = useState('')
 
-  const submission = useCallback((e:any /* to make eslint happy */) => {
+  const submission: React.FormEventHandler<HTMLFormElement> = useCallback((e) => {
     e.preventDefault()
 
-    const emailInput = e.target.email.value
-    const passwordInput = e.target.password.value
+    const formInput = e.target as IElements
 
-    let payload: any = {
+    const emailInput = formInput.email.value
+    const passwordInput = formInput.password.value
+    const nameInput = formInput.usrName ? formInput.usrName.value : ''
+
+    const payload = {
       email: emailInput,
       pasword: passwordInput,
-    }
-
-    if (isLogin) {
-      payload = {
-        ...payload,
-        name: e.target.name.value,
-      }
+      name: nameInput,
     }
 
     const endpoint = isLogin ? LOGIN : REGISTER
@@ -51,8 +54,8 @@ const AuthCard: React.FC<{isLogin: boolean}> = ({ isLogin }) => {
 
         {!isLogin &&
           <>
-            <label htmlFor="name">Name:</label>
-            <input type='text' id='name' name='name' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-1.5 mb-3' />
+            <label htmlFor="usrName">Name:</label>
+            <input type='text' id='usrName' name='usrName' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-1.5 mb-3' />
           </>
         }
 
