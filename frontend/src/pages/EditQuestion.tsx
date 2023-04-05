@@ -5,13 +5,14 @@ import { QUIZ } from '../utils/endpoint';
 import Fetcher from '../utils/fetcher';
 import { fileToDataUrl } from '../utils/helpers';
 
+// No types or interface cuz eslint is not happy
 const EditQuestion: React.FC = () => {
   const { quizId, questionId } = useParams()
-  const [quizData, setQuizData]: any = useState(null)
-  const [questionData, setQuestionData]: any = useState(null)
+  const [quizData, setQuizData]: any = useState()
+  const [questionData, setQuestionData]: any = useState()
   const [quizType, setQuizType] = useState('sc')
   const [embedType, setEmbedType] = useState('vid')
-  const [answerOption, setAnswerOption]: any = useState([])
+  const [answerOption, setAnswerOption] = useState([])
   const [errMsg, setErrMsg] = useState('')
 
   const navigate = useNavigate()
@@ -87,11 +88,16 @@ const EditQuestion: React.FC = () => {
       setErrMsg('Embeds must not be empty')
     }
 
+    if (!quizData) {
+      setErrMsg('Something went wrong')
+      return
+    }
+
     setErrMsg('')
 
     // Construct payload
     const question = {
-      id: questionId,
+      id: questionId as string,
       question: {
         type: quizType,
         text: e.target.question.value,
@@ -152,8 +158,8 @@ const EditQuestion: React.FC = () => {
         <div>
           <label htmlFor='question-type' className='block mb-1'>Question Type: </label>
           <select id='question-type' defaultValue={quizType} onChange={(e: any) => setQuizType(e.target.value)} className='border text-sm rounded-lg block w-full p-2.5 bg-[#2c2c2c] border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500'>
-            <option value='sc'>Single Choice</option>
-            <option value='mc'>Multiple Choice</option>
+            <option value={'sc'}>Single Choice</option>
+            <option value={'mc'}>Multiple Choice</option>
           </select>
         </div>
 
@@ -174,10 +180,10 @@ const EditQuestion: React.FC = () => {
         <div>
           <label htmlFor='embeds' className='block mb-1'>Embeds: </label>
           <select id='embed-type' defaultValue={embedType} onChange={(e: any) => setEmbedType(e.target.value)} className='border text-sm rounded-lg block w-full p-2.5 bg-[#2c2c2c] border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 mb-2'>
-            <option value='vid'>Video</option>
-            <option value='img'>Image</option>
+            <option value={'vid'}>Video</option>
+            <option value={'img'}>Image</option>
           </select>
-          <input type={embedType === 'vid' ? 'text' : 'file'} id='embeds' name='embeds' placeholder={questionData ? questionData.point : 'Embeds'} className={`block w-full text-sm border rounded-lg cursor-pointer text-gray-400 focus:outline-none bg-[#2c2c2c] border-gray-600 placeholder-gray-400 file:bg-[#3f3f3f] file:text-white file:border-0 file:border-r-[1px] file:border-gray-400 ${embedType === 'vid' ? 'py-2.5 pl-2' : 'file:py-2.5'}`} />
+          <input type={embedType === 'vid' ? 'text' : 'file'} id='embeds' name='embeds' placeholder={questionData ? questionData.points : 'Embeds'} className={`block w-full text-sm border rounded-lg cursor-pointer text-gray-400 focus:outline-none bg-[#2c2c2c] border-gray-600 placeholder-gray-400 file:bg-[#3f3f3f] file:text-white file:border-0 file:border-r-[1px] file:border-gray-400 ${embedType === 'vid' ? 'py-2.5 pl-2' : 'file:py-2.5'}`} />
         </div>
 
         <button type='submit' className='mt-2 bg-blue-500 rounded-lg px-2 py-1'>

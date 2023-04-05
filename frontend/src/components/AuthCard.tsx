@@ -3,12 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LOGIN, REGISTER } from '../utils/endpoint';
 import Fetcher from '../utils/fetcher';
 
-interface IElements extends HTMLFormElement {
-  email: HTMLInputElement,
-  password: HTMLInputElement,
-  usrName?: HTMLInputElement,
-}
-
 const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
   const navigate = useNavigate()
   const [errorMsg, setErrorMsg] = useState('')
@@ -16,7 +10,7 @@ const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
   const submission: React.FormEventHandler<HTMLFormElement> = useCallback((e) => {
     e.preventDefault()
 
-    const formInput = e.target as IElements
+    const formInput = e.target as any
 
     const emailInput = formInput.email.value
     const passwordInput = formInput.password.value

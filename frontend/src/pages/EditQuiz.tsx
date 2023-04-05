@@ -13,7 +13,7 @@ const EditQuiz: React.FC = () => {
   const [errMsg, setErrMsg] = useState('')
 
   const removeQuestion = useCallback((qId: string) => {
-    const newQuestionSet = quizData?.questions.filter((q: any) => q.id !== qId)
+    const newQuestionSet = quizData ? quizData.questions.filter((q: any) => q.id !== qId) : []
     quizData.questions = newQuestionSet
     setQuizData(quizData)
     setQuestions(newQuestionSet)
