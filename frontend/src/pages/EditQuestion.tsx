@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AnswerSection from '../components/answer_section/AnswerSection';
 import FileInputSection from '../components/inputs/FileInputSection';
@@ -7,6 +7,35 @@ import { QUIZ } from '../utils/endpoint';
 import Fetcher from '../utils/fetcher';
 import { fileToDataUrl } from '../utils/helpers';
 
+const useAnswerOption = () => {
+  const [answerOption, setAnswerOption]: any = useState([])
+
+  const getNewAnswerId = useMemo(() => {
+    if (answerOption.length === 0) {
+      return 0
+    }
+
+    const res = Math.max(...answerOption.map((ans: any) => parseInt(ans.id)))
+    return res + 1
+  }, [answerOption])
+
+  const appendAnswer = useCallback((ans: any) => {
+    setAnswerOption([{ id: getNewAnswerId, text: ans, isAns: false }, ...answerOption])
+  }, [answerOption])
+
+  const removeAnswer = useCallback((ans: any) => {
+    setAnswerOption(answerOption.filter((a: any) => a.id !== ans))
+  }, [answerOption])
+
+  const setAnswer = useCallback((ans: any, isCorrect: any) => {
+    const idx = answerOption.findIndex((a: any) => a.id === ans)
+    answerOption[idx].isAns = isCorrect
+    setAnswerOption(answerOption)
+  }, [answerOption])
+
+  return { answerOption, setAnswerOption, appendAnswer, removeAnswer, setAnswer }
+}
+
 // No types or interface cuz eslint is not happy
 const EditQuestion: React.FC = () => {
   const { quizId, questionId } = useParams()
@@ -14,8 +43,9 @@ const EditQuestion: React.FC = () => {
   const [questionData, setQuestionData]: any = useState()
   const [quizType, setQuizType] = useState('sc')
   const [embedType, setEmbedType] = useState('vid')
-  const [answerOption, setAnswerOption] = useState([])
   const [errMsg, setErrMsg] = useState('')
+
+  const answer = useAnswerOption()
 
   const navigate = useNavigate()
 
@@ -34,7 +64,7 @@ const EditQuestion: React.FC = () => {
       const qData = data.questions.find((q: any) => q.id === questionId)
       setQuestionData(qData)
 
-      setAnswerOption(qData?.answer ? qData.answer : [])
+      answer.setAnswerOption(qData?.answer ? qData.answer : [])
     })
   }, [])
 
@@ -59,12 +89,12 @@ const EditQuestion: React.FC = () => {
       return
     }
 
-    if (answerOption.length < 2 || answerOption.length > 6) {
+    if (answer.answerOption.length < 2 || answer.answerOption.length > 6) {
       setErrMsg('Answer options should be between 2 and 6')
       return
     }
 
-    const numAnswers = answerOption.filter((a: any) => a.isAns).length
+    const numAnswers = answer.answerOption.filter((a: any) => a.isAns).length
 
     if (numAnswers === 0) {
       setErrMsg('There must be at least 1 correct answer')
@@ -104,7 +134,7 @@ const EditQuestion: React.FC = () => {
         type: quizType,
         text: e.target.question.value,
       },
-      answer: answerOption,
+      answer: answer.answerOption,
       timeLimit: e.target.timeLimit.value,
       points: e.target.points.value,
       embeds: {
@@ -141,7 +171,7 @@ const EditQuestion: React.FC = () => {
 
       navigate(`/quiz/${quizId}`)
     })
-  }, [answerOption, quizType, embedType])
+  }, [answer.answerOption, quizType, embedType])
 
   return (
     <div className='default-padding'>
@@ -166,7 +196,7 @@ const EditQuestion: React.FC = () => {
         </div>
 
         <div>
-          <AnswerSection answerState={[answerOption, setAnswerOption]} />
+          <AnswerSection answerState={answer} />
         </div>
 
         <div>

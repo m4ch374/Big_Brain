@@ -11,14 +11,14 @@ import { fileToDataUrl } from '../utils/helpers';
 const EditQuiz: React.FC = () => {
   const { quizId } = useParams()
   const [quizData, setQuizData]: any = useState()
-  const [questions, setQuestions]: any = useState([])
+  const [questionsData, setQuestionsData]: any = useState([])
   const [errMsg, setErrMsg] = useState('')
 
   const removeQuestion = useCallback((qId: string) => {
     const newQuestionSet = quizData ? quizData.questions.filter((q: any) => q.id !== qId) : []
     quizData.questions = newQuestionSet
     setQuizData(quizData)
-    setQuestions(newQuestionSet)
+    setQuestionsData(newQuestionSet)
 
     Fetcher.put(QUIZ(quizId as string))
       .withLocalStorageToken()
@@ -37,17 +37,17 @@ const EditQuiz: React.FC = () => {
 
     result.then((data: any) => {
       setQuizData(data)
-      setQuestions(data.questions)
+      setQuestionsData(data.questions)
     })
   }, [])
 
   const getQuestionId = useCallback(() => {
-    if (questions.length === 0) {
+    if (questionsData.length === 0) {
       return 0
     }
 
-    return Math.max(...questions.map((q: any) => parseInt(q.id))) + 1
-  }, [quizData, questions])
+    return Math.max(...questionsData.map((q: any) => parseInt(q.id))) + 1
+  }, [quizData, questionsData])
 
   const submitForm = useCallback((e: any) => {
     e.preventDefault()
@@ -58,7 +58,7 @@ const EditQuiz: React.FC = () => {
           const result = Fetcher.put(QUIZ(quizId as string))
             .withLocalStorageToken()
             .withJsonPayload({
-              questions: questions,
+              questions: questionsData,
               name: e.target.name.value,
               thumbnail: url
             })
@@ -112,7 +112,7 @@ const EditQuiz: React.FC = () => {
       <hr className='h-px m-0 p-0 bg-gray-500 border-0' />
 
       <div className='flex flex-col justify-center mt-3 gap-5'>
-        {questions.map((q: any) => {
+        {questionsData.map((q: any) => {
           return <QuestionCard key={q.id} quesiton={q} removeQuestion={removeQuestion} />
         })}
       </div>
