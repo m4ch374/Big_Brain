@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Plus from '../components/icons/Plus';
+import FileInputSection from '../components/inputs/FileInputSection';
+import InputSection from '../components/inputs/InputSection';
 import QuestionCard from '../components/QuestionCard';
 import { QUIZ } from '../utils/endpoint';
 import Fetcher from '../utils/fetcher';
@@ -56,7 +58,7 @@ const EditQuiz: React.FC = () => {
           const result = Fetcher.put(QUIZ(quizId as string))
             .withLocalStorageToken()
             .withJsonPayload({
-              questions: quizData.questions,
+              questions: questions,
               name: e.target.name.value,
               thumbnail: url
             })
@@ -66,6 +68,8 @@ const EditQuiz: React.FC = () => {
             if (data.error) {
               setErrMsg(data.error)
             }
+
+            setErrMsg('')
           })
         })
     } catch (e: any) {
@@ -85,13 +89,12 @@ const EditQuiz: React.FC = () => {
       <form onSubmit={submitForm} className='text-xl flex flex-col gap-3'>
         <div>
           <label htmlFor='name' className='block mb-1'>Name: </label>
-          {/* "no trailing whitespces allowed" so i cant break it up to be more readable lol */}
-          <input type='text' id='name' name='name' placeholder={quizData?.name} className='border text-sm rounded-lg block w-full p-2.5 m-0 bg-[#2c2c2c] border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500' />
+          <InputSection type='text' identifier='name' placeholder={quizData?.name} />
         </div>
 
         <div>
           <label htmlFor='file'>Thumbnail:</label>
-          <input aria-describedby='file-input' id="file" name='file' type="file" className="block w-full text-sm border rounded-lg cursor-pointer text-gray-400 focus:outline-none bg-[#2c2c2c] border-gray-600 placeholder-gray-400 file:bg-[#3f3f3f] file:text-white file:border-0 file:border-r-[1px] file:border-gray-400 file:py-2" />
+          <FileInputSection identifier='file' />
           <p className="mt-1 text-sm text-gray-300" id="file-input">PNG, JPG or JPEG</p>
         </div>
 
