@@ -6,16 +6,21 @@ import Cross from './icons/Cross';
 import Play from './icons/Play';
 import PopupTemplate from './popups/PopupTemplate';
 
-const PlayGameBtn: React.FC<{ isGameStartBtn: any, quizId: string }> = ({ isGameStartBtn, quizId }) => {
+const PlayGameBtn: React.FC<{ quizId: string }> = ({ quizId }) => {
   const [startPopup, setStartPopup] = useState(false)
   const [clipboard, setClipboard] = useState('Please wait')
 
   const startGame = useCallback(async () => {
     setStartPopup(true)
 
-    await Fetcher.post(START_QUIZ(quizId))
+    const startResult: any = await Fetcher.post(START_QUIZ(quizId))
       .withLocalStorageToken()
       .fetchResult()
+
+    if (startResult.error) {
+      setClipboard('Quiz active')
+      return
+    }
 
     const result: any = await Fetcher.get(QUIZ(quizId))
       .withLocalStorageToken()
@@ -27,7 +32,6 @@ const PlayGameBtn: React.FC<{ isGameStartBtn: any, quizId: string }> = ({ isGame
 
   const closePopup = useCallback(() => {
     setStartPopup(false)
-    isGameStartBtn(false)
   }, [])
 
   const copyClipboard = useCallback(() => {
@@ -38,7 +42,7 @@ const PlayGameBtn: React.FC<{ isGameStartBtn: any, quizId: string }> = ({ isGame
   return (
     <>
       { startPopup &&
-        <PopupTemplate fromStartBtn={true} setIsStartGameBtn={isGameStartBtn} startPopup={setStartPopup}>
+        <PopupTemplate startPopup={setStartPopup}>
           <div className='flex justify-between items-center mb-4'>
             <h1 className='text-2xl'>Session ID</h1>
             <button aria-label='close popup' onClick={closePopup}>

@@ -10,7 +10,6 @@ import StopGameBtn from './StopGameBtn';
 const GameCard: React.FC<{ metaData: any }> = ({ metaData }) => {
   const [data, setData]: any = useState()
   const [deleted, setDeleted] = useState(false)
-  const [isGameStartBtn, setIsGameStartBtn] = useState(true)
 
   const deleteBtn = useCallback(() => {
     const result = Fetcher.delete(QUIZ(metaData.id))
@@ -41,7 +40,6 @@ const GameCard: React.FC<{ metaData: any }> = ({ metaData }) => {
 
     result.then((resData: any) => {
       setData(resData)
-      setIsGameStartBtn(resData.active === null)
     })
   }, [])
 
@@ -57,16 +55,20 @@ const GameCard: React.FC<{ metaData: any }> = ({ metaData }) => {
             <h3>{`Total time: ${getTotalTime()}`}</h3>
           </div>
 
-          <div className='place-self-end pr-3 pb-2 flex gap-3'>
-            {isGameStartBtn ? <PlayGameBtn isGameStartBtn={setIsGameStartBtn} quizId={metaData.id} /> : <StopGameBtn isGameStartBtn={setIsGameStartBtn} quizId={metaData.id} />}
+          <div className='m-4 mt-0 flex justify-between'>
+            <div className='flex gap-3'>
+              <PlayGameBtn quizId={metaData.id} />
+              <StopGameBtn quizId={metaData.id} />
+            </div>
+            <div className='flex gap-3'>
+              <Link to={`/quiz/${metaData.id}`}>
+                <Edit />
+              </Link>
 
-            <Link to={`/quiz/${metaData.id}`}>
-              <Edit />
-            </Link>
-
-            <button onClick={deleteBtn} aria-label='delete game' className='text-red-600'>
-              <Delete />
-            </button>
+              <button onClick={deleteBtn} aria-label='delete game' className='text-red-600'>
+                <Delete />
+              </button>
+            </div>
           </div>
         </div>
       }
