@@ -12,3 +12,7 @@ export const QUIZZES = '/admin/quiz'
 export const NEW_QUIZ = '/admin/quiz/new'
 
 export const QUIZ = (id: string) => '/admin/quiz/' + id
+
+export const START_QUIZ = (id: string) => '/admin/quiz/' + id + '/start'
+
+export const END_QUIZ = (id: string) => '/admin/quiz/' + id + '/end'
