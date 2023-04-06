@@ -15,4 +15,8 @@ export const QUIZ = (id: string) => '/admin/quiz/' + id
 
 export const START_QUIZ = (id: string) => '/admin/quiz/' + id + '/start'
 
+export const ADVANCE_QUIZ = (id: string) => '/admin/quiz/' + id + '/advance'
+
 export const END_QUIZ = (id: string) => '/admin/quiz/' + id + '/end'
+
+export const SESSION_STATUS = (id: string) => '/admin/session/' + id + '/status'

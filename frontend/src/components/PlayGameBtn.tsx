@@ -22,12 +22,18 @@ const PlayGameBtn: React.FC<{ isGameStartBtn: any, quizId: string }> = ({ isGame
       .fetchResult()
 
     setClipboard(result.active)
+    localStorage.setItem(quizId, result.active)
   }, [])
 
   const closePopup = useCallback(() => {
     setStartPopup(false)
     isGameStartBtn(false)
   }, [])
+
+  const copyClipboard = useCallback(() => {
+    const txt = `http://localhost:3000/play/${clipboard}`
+    navigator.clipboard.writeText(txt)
+  }, [clipboard])
 
   return (
     <>
@@ -41,7 +47,7 @@ const PlayGameBtn: React.FC<{ isGameStartBtn: any, quizId: string }> = ({ isGame
           </div>
           <div className='border border-gray-400 w-full flex justify-between rounded-md mb-2'>
             <input type='text' placeholder={clipboard} disabled aria-label='session id' className='h-full p-1 w-full rounded-md' />
-            <button aria-label='copy id' className='px-2 bg-gray-300 rounded-r-md'>
+            <button aria-label='copy id' onClick={copyClipboard} className='px-2 bg-gray-300 rounded-r-md'>
               <Clipboard />
             </button>
           </div>
