@@ -40,7 +40,6 @@ const useAnswerOption = () => {
 const EditQuestion: React.FC = () => {
   const { quizId, questionId } = useParams()
   const [quizData, setQuizData]: any = useState()
-  const [questionData, setQuestionData]: any = useState()
   const [quizType, setQuizType] = useState('sc')
   const [embedType, setEmbedType] = useState('vid')
   const [errMsg, setErrMsg] = useState('')
@@ -62,8 +61,6 @@ const EditQuestion: React.FC = () => {
       setQuizData(data)
 
       const qData = data.questions.find((q: any) => q.id === questionId)
-      setQuestionData(qData)
-
       answer.setAnswerOption(qData?.answer ? qData.answer : [])
     })
   }, [])
@@ -156,8 +153,6 @@ const EditQuestion: React.FC = () => {
       thumbnail: quizData.thumbnail,
     }
 
-    console.log(payload)
-
     const result = Fetcher.put(QUIZ(quizId as string))
       .withLocalStorageToken()
       .withJsonPayload(payload)
@@ -184,7 +179,7 @@ const EditQuestion: React.FC = () => {
       <form className='text-xl flex flex-col gap-3' onSubmit={formSubmit}>
         <div>
           <label htmlFor='question' className='block mb-1'>Question: </label>
-          <InputSection type='text' identifier='question' placeholder={questionData ? questionData.quesiton.text : 'New question'} />
+          <InputSection type='text' identifier='question' placeholder='New question' />
         </div>
 
         <div>
@@ -201,12 +196,12 @@ const EditQuestion: React.FC = () => {
 
         <div>
           <label htmlFor='timeLimit' className='block mb-1'>Time Limit: (in seconds) </label>
-          <InputSection type='text' identifier='timeLimit' placeholder={questionData ? questionData.timeLimit : 'Time limit'} />
+          <InputSection type='text' identifier='timeLimit' placeholder='Time limit' />
         </div>
 
         <div>
           <label htmlFor='points' className='block mb-1'>Points: </label>
-          <InputSection type='text' identifier='points' placeholder={questionData ? questionData.points : 'Points'} />
+          <InputSection type='text' identifier='points' placeholder='Points' />
         </div>
 
         <div>
