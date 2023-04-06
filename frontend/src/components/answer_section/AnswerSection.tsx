@@ -20,7 +20,7 @@ const AnswerSection: React.FC<{ answerState: any }> = ({ answerState }) => {
       <div className='flex flex-col justify-start mt-4'>
         {newAnswer && <AnswerInput setShow={setNewAnswer} appendFnc={answerState.appendAnswer} />}
 
-        {answerState.answerOptions?.map((a: any, idx: any) => {
+        {answerState.answerOption.map((a: any, idx: any) => {
           return (
             <AnswerOption key={idx} ans={a} removeFnc={answerState.removeAnswer} setAns={answerState.setAnswer} />
           )
