@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 // From assignment 3
 export function fileToDataUrl (file: any) {
   const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg']
@@ -14,4 +16,14 @@ export function fileToDataUrl (file: any) {
   });
   reader.readAsDataURL(file);
   return dataUrlPromise;
+}
+
+export const useInterval = (callback: Function, delay: number) => {
+  useEffect(() => {
+    callback()
+
+    const interval = setInterval(callback, delay)
+
+    return () => clearInterval(interval)
+  }, [callback, delay])
 }

@@ -7,7 +7,8 @@ import Fetcher from '../utils/fetcher'
 
 const QuizResults: React.FC = () => {
   const { sessionId } = useParams()
-  const [isActive, setIsActive] = useState<boolean>()
+  const [isActive, setIsActive] = useState(false)
+  const [loading, setLoading] = useState(true)
   const sessionState = useRef()
 
   useEffect(() => {
@@ -16,20 +17,20 @@ const QuizResults: React.FC = () => {
       .fetchResult()
 
     result.then((data: any) => {
-      console.log(data.results)
       sessionState.current = data.results
       setIsActive(data.results.active)
+      setLoading(false)
     })
   }, [])
 
   return (
     <div className='default-padding'>
       <h1 className='text-2xl'>Session: {sessionId}</h1>
-      <h3 className='text-lg'>Status: {isActive ? 'Active' : 'Ended'}</h3>
+      <h3 className='text-lg'>Status: {loading ? 'Loading' : isActive ? 'Active' : 'Ended'}</h3>
 
       <hr className='h-px my-2 bg-gray-500 border-0' />
 
-      {isActive ? <QuizResultActive sessionState={sessionState.current} setActive={setIsActive} /> : <QuizResultFinished />}
+      {!loading && isActive ? <QuizResultActive sessionState={sessionState.current} setActive={setIsActive} /> : <QuizResultFinished />}
     </div>
   )
 }

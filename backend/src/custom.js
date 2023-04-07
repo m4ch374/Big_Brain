@@ -13,7 +13,7 @@ export const quizQuestionPublicReturn = question => {
  the correct answers (minimum 1).
 */
 export const quizQuestionGetCorrectAnswers = question => {
-  return question.answer.filter(a => a.isAns);
+  return question.answer.filter(a => a.isAns).map(a => a.id);
 };
 
 /*
