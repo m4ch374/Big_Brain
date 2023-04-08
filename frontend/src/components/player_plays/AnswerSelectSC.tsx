@@ -9,7 +9,7 @@ const AnswerSelectSC: React.FC<{ answers: any }> = ({ answers }) => {
   const selectAns: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     Fetcher.put(ANSWER_QUESTION(usrId))
       .withJsonPayload({
-        answerIds: [e.target.value]
+        answerIds: [parseInt(e.target.value)]
       })
       .fetchResult()
   }

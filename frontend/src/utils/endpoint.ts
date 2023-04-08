@@ -21,6 +21,8 @@ export const END_QUIZ = (id: string) => '/admin/quiz/' + id + '/end'
 
 export const SESSION_STATUS = (id: string) => '/admin/session/' + id + '/status'
 
+export const SESSION_RESULT = (id: string) => '/admin/session/' + id + '/results'
+
 export const JOIN_SESSION = (id: string) => '/play/join/' + id
 
 export const PLAYER_SESSION_STATUS = (id: string) => '/play/' + id + '/status'

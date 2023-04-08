@@ -34,7 +34,9 @@ const PlayGame: React.FC = () => {
     }
 
     const result: any = await Fetcher.get(QUESTION(usrId)).fetchResult()
-    setQuestion(result.question)
+    if (result.question) {
+      setQuestion(result.question)
+    }
   }, 1000)
 
   return (
