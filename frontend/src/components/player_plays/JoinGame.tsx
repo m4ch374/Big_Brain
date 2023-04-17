@@ -3,15 +3,16 @@ import { useParams } from 'react-router-dom'
 import { JOIN_SESSION } from '../../utils/endpoint'
 import Fetcher from '../../utils/fetcher'
 import InputSection from '../inputs/InputSection'
+import { IPlayerJoin } from '../../types'
 
-const JoinGame: React.FC<{ setId: any }> = ({ setId }) => {
+const JoinGame: React.FC<{ setId: React.Dispatch<React.SetStateAction<number>> }> = ({ setId }) => {
   const { sessionId } = useParams()
   const [errMsg, setErrMsg] = useState('')
 
   // Not using useCallBack this time cuz we'll need to update on each rerender
   const formSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
-    const input: any = e.target
+    const input = e.currentTarget
 
     const session = input.sessionId.value === '' ? sessionId : input.sessionId.value
     const usrName = input.usrName.value
@@ -25,13 +26,13 @@ const JoinGame: React.FC<{ setId: any }> = ({ setId }) => {
       .withJsonPayload({
         name: usrName
       })
-      .fetchResult()
+      .fetchResult() as Promise<IPlayerJoin>
 
-    result.then((data: any) => {
+    result.then(data => {
       if (data.error) {
         setErrMsg('Cannot join session')
       } else {
-        setId(parseInt(data.playerId))
+        setId(data.playerId)
       }
     })
   }

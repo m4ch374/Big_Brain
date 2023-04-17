@@ -1,8 +1,14 @@
 import React, { useContext } from 'react'
 import { CurrQuestionContext } from './PlayGame'
+import { TQuestion, TResPlayerResult } from '../../types'
 
-const AnswerCard: React.FC<{ answerMeta: any, currIdx: number }> = ({ answerMeta, currIdx }) => {
-  const currQuestion: any = useContext(CurrQuestionContext)
+type TAnswerCard = {
+  answerMeta: TResPlayerResult,
+  currIdx: number
+}
+
+const AnswerCard: React.FC<TAnswerCard> = ({ answerMeta, currIdx }) => {
+  const currQuestion = useContext(CurrQuestionContext) as TQuestion
 
   return (
     <div className='bg-[#2c2c2c] w-[90%] p-2 rounded-md hover:bg-[#3c3c3c]'>
@@ -12,7 +18,7 @@ const AnswerCard: React.FC<{ answerMeta: any, currIdx: number }> = ({ answerMeta
         {answerMeta.answerIds.map((id: number) => {
           return (
             <li key={id}>
-              {currQuestion?.answer.find((a: any) => parseInt(a.id) === id).text}
+              {currQuestion?.answers.find(a => a.id === id)?.text}
             </li>
           )
         })}

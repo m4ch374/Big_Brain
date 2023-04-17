@@ -1,7 +1,11 @@
 import React, { useCallback } from 'react';
 
-// No types or interfaces cuz eslint is unhappy
-const PopupTemplate: React.FC<{ children?: string | JSX.Element | JSX.Element[], startPopup: any }> = ({ children = undefined, startPopup }) => {
+type TPopupTemplate = {
+  children?: string | JSX.Element | JSX.Element[],
+  startPopup: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const PopupTemplate: React.FC<TPopupTemplate> = ({ children = undefined, startPopup }) => {
   const clickedBackdrop = useCallback(() => {
     startPopup(false)
   }, [])

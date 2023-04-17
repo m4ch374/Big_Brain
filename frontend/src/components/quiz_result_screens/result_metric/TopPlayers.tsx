@@ -1,17 +1,18 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { ResultsContext } from '../QuizResultFinished'
+import { TResPlayerResult, TResResult } from '../../../types'
 
 const TopPlayers: React.FC<{ topN: number }> = ({ topN }) => {
   const results = useContext(ResultsContext)
 
-  const [sorted, setSorted] = useState<any>([])
+  const [sorted, setSorted] = useState<TResResult[]>([])
 
-  const usrNumCorrect = useCallback((ans: any) => {
-    return ans.filter((a: any) => a.correct).length
+  const usrNumCorrect = useCallback((ans: TResPlayerResult[]) => {
+    return ans.filter(a => a.correct).length
   }, [results])
 
   useEffect(() => {
-    results.sort((a: any, b: any) => usrNumCorrect(b.answers) - usrNumCorrect(a.answers))
+    results.sort((a: TResResult, b: TResResult) => usrNumCorrect(b.answers) - usrNumCorrect(a.answers))
     setSorted(results.slice(0, topN - 1))
   }, [results])
 
@@ -23,9 +24,9 @@ const TopPlayers: React.FC<{ topN: number }> = ({ topN }) => {
           <h3>Name</h3>
           <h3>Score</h3>
         </div>
-        {sorted.map((r: any, idx: any) => {
+        {sorted.map((r: TResResult, idx: number) => {
           return (
-            <div key={idx} className='grid grid-cols-[1fr_3fr] justify-items-stretch py-2 my-1 hover:bg-[#2c2c2c] rounded-md'>
+            <div key={idx as React.Key} className='grid grid-cols-[1fr_3fr] justify-items-stretch py-2 my-1 hover:bg-[#2c2c2c] rounded-md'>
               <h3 className='text-center border-r border-gray-400/80'>{r.name}</h3>
               <h3 className='text-center'>{usrNumCorrect(r.answers)}</h3>
             </div>

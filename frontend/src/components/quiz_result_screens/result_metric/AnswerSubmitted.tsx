@@ -4,7 +4,7 @@ import { Bar } from 'react-chartjs-2'
 import { ResultsContext } from '../QuizResultFinished'
 
 const AnswerSubmitted: React.FC = () => {
-  const results: any = useContext(ResultsContext)
+  const results = useContext(ResultsContext)
 
   const [rate, setRate] = useState<number[]>([])
 
@@ -13,7 +13,18 @@ const AnswerSubmitted: React.FC = () => {
       return [0]
     }
 
-    return [...Array(results[0].answers.length).keys()].map((i: number) => i + 1)
+    // I had a one-line solution that somehow eslint is unhappy with
+    // [...Array(results[0].answers.length).keys()].map((i: number) => i + 1)
+
+    const res = []
+
+    // Checking for undefined does not work
+    // eslint-disable-next-line
+    for (let i = 0; i < results[0]!.answers.length; i++) {
+      res.push(i + 1)
+    }
+
+    return res
   }, [results])
 
   useEffect(() => {
@@ -25,8 +36,10 @@ const AnswerSubmitted: React.FC = () => {
     }
 
     const ans = []
-    for (let i = 0; i < results[0].answers.length; i++) {
-      const ansCount = results.filter((r: any) => r.answers[i].answeredAt).length
+    // eslint-disable-next-line
+    for (let i = 0; i < results[0]!.answers.length; i++) {
+      // eslint-disable-next-line
+      const ansCount = results.filter(r => r.answers[i]!.answeredAt).length
       ans.push(ansCount)
     }
 

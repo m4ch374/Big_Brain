@@ -4,7 +4,7 @@ import { Chart } from 'chart.js/auto'
 import { ResultsContext } from '../QuizResultFinished'
 
 const CorrectRate: React.FC = () => {
-  const results: any = useContext(ResultsContext)
+  const results = useContext(ResultsContext)
 
   const [rate, setRate] = useState<number[]>([])
 
@@ -13,7 +13,18 @@ const CorrectRate: React.FC = () => {
       return [0]
     }
 
-    return [...Array(results[0].answers.length).keys()].map((i: number) => i + 1)
+    // I had a one-line solution that somehow eslint is unhappy with
+    // [...Array(results[0].answers.length).keys()].map((i: number) => i + 1)
+
+    const res = []
+
+    // Again, i have tried checking if it is undefined, the error still presist
+    // eslint-disable-next-line
+    for (let i = 0; i < results[0]!.answers.length; i++) {
+      res.push(i + 1)
+    }
+
+    return res
   }, [results])
 
   useEffect(() => {
@@ -25,8 +36,11 @@ const CorrectRate: React.FC = () => {
     }
 
     const newRate = []
-    for (let i = 0; i < results[0].answers.length; i++) {
-      const avg = results.filter((r: any) => r.answers[i].correct).length / results.length
+
+    // eslint-disable-next-line
+    for (let i = 0; i < results[0]!.answers.length; i++) {
+      // eslint-disable-next-line
+      const avg = results.filter(r => r.answers[i]!.correct).length / results.length
       newRate.push(avg * 100)
     }
 

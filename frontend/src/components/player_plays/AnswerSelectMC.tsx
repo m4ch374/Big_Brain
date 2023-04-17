@@ -2,14 +2,15 @@ import React, { useContext, useEffect, useState } from 'react'
 import { UserIdContext } from '../../pages/PlaySession'
 import { ANSWER_QUESTION } from '../../utils/endpoint'
 import Fetcher from '../../utils/fetcher'
+import { TAnswerDetails } from '../../types'
 
-const AnswerSelectMC: React.FC<{answers: any}> = ({ answers }) => {
+const AnswerSelectMC: React.FC<{ answers: TAnswerDetails[] }> = ({ answers }) => {
   const usrId = useContext(UserIdContext)
 
   const [ans, setAns] = useState<number[]>([])
 
   const checkBox: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    let newAns: any = []
+    let newAns: number[] = []
 
     if (e.target.checked) {
       newAns = [parseInt(e.target.value), ...ans]
@@ -29,7 +30,7 @@ const AnswerSelectMC: React.FC<{answers: any}> = ({ answers }) => {
 
   return (
     <div className='flex flex-col w-full'>
-      {answers.map((ans: any) => {
+      {answers.map(ans => {
         return (
           <div key={ans.id} className='flex items-center pl-4 rounded hover:bg-[#3c3c3c] w-full'>
             <input id={`ans-${ans.id}`} value={ans.id} type='checkbox' onChange={checkBox} className="w-4 h-4 text-blue-600 rounded focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600" />

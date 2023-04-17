@@ -2,8 +2,9 @@ import React, { useContext } from 'react'
 import { UserIdContext } from '../../pages/PlaySession'
 import { ANSWER_QUESTION } from '../../utils/endpoint'
 import Fetcher from '../../utils/fetcher'
+import { TAnswerDetails } from '../../types'
 
-const AnswerSelectSC: React.FC<{ answers: any }> = ({ answers }) => {
+const AnswerSelectSC: React.FC<{ answers: TAnswerDetails[] }> = ({ answers }) => {
   const usrId = useContext(UserIdContext).toString()
 
   const selectAns: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -16,7 +17,7 @@ const AnswerSelectSC: React.FC<{ answers: any }> = ({ answers }) => {
 
   return (
     <div className='flex flex-col w-full'>
-      {answers.map((ans: any) => {
+      {answers.map(ans => {
         return (
           <div key={ans.id} className='flex items-center pl-4 rounded hover:bg-[#3c3c3c] w-full'>
             <input id={`ans-${ans.id}`} name='ans' value={ans.id} onChange={selectAns} type='radio' className="w-4 h-4 text-blue-600 focus:ring-blue-500 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600" />

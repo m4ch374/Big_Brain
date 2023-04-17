@@ -6,30 +6,36 @@ import InputSection from '../components/inputs/InputSection';
 import { QUIZ } from '../utils/endpoint';
 import Fetcher from '../utils/fetcher';
 import { fileToDataUrl } from '../utils/helpers';
+import { ETypeEnum, IResQuiz, QTypeEnum, TAnswerDetails, TQuestion } from '../types';
 
 const useAnswerOption = () => {
-  const [answerOption, setAnswerOption]: any = useState([])
+  const [answerOption, setAnswerOption] = useState<TAnswerDetails[]>([])
 
   const getNewAnswerId = useMemo(() => {
     if (answerOption.length === 0) {
       return 0
     }
 
-    const res = Math.max(...answerOption.map((ans: any) => parseInt(ans.id)))
+    const res = Math.max(...answerOption.map(ans => ans.id))
     return res + 1
   }, [answerOption])
 
-  const appendAnswer = useCallback((ans: any) => {
-    setAnswerOption([{ id: getNewAnswerId, text: ans, isAns: false }, ...answerOption])
+  const appendAnswer = useCallback((ansText: string) => {
+    setAnswerOption([{ id: getNewAnswerId, text: ansText, isAns: false }, ...answerOption])
   }, [answerOption])
 
-  const removeAnswer = useCallback((ans: any) => {
-    setAnswerOption(answerOption.filter((a: any) => a.id !== ans))
+  const removeAnswer = useCallback((ansId: number) => {
+    setAnswerOption(answerOption.filter(a => a.id !== ansId))
   }, [answerOption])
 
-  const setAnswer = useCallback((ans: any, isCorrect: any) => {
-    const idx = answerOption.findIndex((a: any) => a.id === ans)
-    answerOption[idx].isAns = isCorrect
+  const setAnswer = useCallback((ansId: number, isCorrect: boolean) => {
+    const idx = answerOption.findIndex(a => a.id === ansId)
+
+    // I have tried doing if statement checks and stuff but it sill shows that
+    // answerOption[idx] could be undefined
+    // so i had to disable next line warning
+    // eslint-disable-next-line
+    answerOption[idx]!.isAns = isCorrect
     setAnswerOption(answerOption)
   }, [answerOption])
 
@@ -39,9 +45,9 @@ const useAnswerOption = () => {
 // No types or interface cuz eslint is not happy
 const EditQuestion: React.FC = () => {
   const { quizId, questionId } = useParams()
-  const [quizData, setQuizData]: any = useState()
-  const [quizType, setQuizType] = useState('sc')
-  const [embedType, setEmbedType] = useState('vid')
+  const [quizData, setQuizData] = useState<IResQuiz>()
+  const [quizType, setQuizType] = useState<QTypeEnum>(QTypeEnum.SC)
+  const [embedType, setEmbedType] = useState<ETypeEnum>(ETypeEnum.NIL)
   const [errMsg, setErrMsg] = useState('')
 
   const answer = useAnswerOption()
@@ -51,17 +57,17 @@ const EditQuestion: React.FC = () => {
   useEffect(() => {
     const result = Fetcher.get(QUIZ(quizId as string))
       .withLocalStorageToken()
-      .fetchResult()
+      .fetchResult() as Promise<IResQuiz>
 
-    result.then((data: any) => {
+    result.then(data => {
       if (data.error) {
         return
       }
 
       setQuizData(data)
 
-      const qData = data.questions.find((q: any) => q.id === questionId)
-      answer.setAnswerOption(qData?.answer ? qData.answer : [])
+      const qData = data.questions?.find(q => q.id === parseInt(questionId as string))
+      answer.setAnswerOption(qData?.answers ? qData.answers : [])
     })
   }, [])
 
@@ -77,11 +83,11 @@ const EditQuestion: React.FC = () => {
     return isInt && isPos
   }
 
-  const formSubmit = useCallback(async (e: any) => {
+  const formSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(async e => {
     e.preventDefault()
 
     // Sanity checks
-    if (e.target.question.value === '') {
+    if (e.currentTarget.question.value === '') {
       setErrMsg('Enter question')
       return
     }
@@ -91,7 +97,7 @@ const EditQuestion: React.FC = () => {
       return
     }
 
-    const numAnswers = answer.answerOption.filter((a: any) => a.isAns).length
+    const numAnswers = answer.answerOption.filter(a => a.isAns).length
 
     if (numAnswers === 0) {
       setErrMsg('There must be at least 1 correct answer')
@@ -103,17 +109,17 @@ const EditQuestion: React.FC = () => {
       return
     }
 
-    if (!isPositiveInteger(e.target.timeLimit.value)) {
+    if (!isPositiveInteger(e.currentTarget.timeLimit.value)) {
       setErrMsg('Time must be a positive integer')
       return
     }
 
-    if (!parseInt(e.target.points.value)) {
+    if (!parseInt(e.currentTarget.points.value)) {
       setErrMsg('Points must be a positive integer')
       return
     }
 
-    if ((embedType === 'vid' && e.target.embeds.value === '') || (embedType === 'img' && !e.target.files)) {
+    if ((embedType === 'vid' && e.currentTarget.embeds.value === '') || (embedType === 'img' && !e.currentTarget.files)) {
       setErrMsg('Embeds must not be empty')
     }
 
@@ -125,22 +131,26 @@ const EditQuestion: React.FC = () => {
     setErrMsg('')
 
     // Construct payload
-    const question = {
-      id: questionId as string,
+    const question: TQuestion = {
+      id: parseInt(questionId as string),
       question: {
         type: quizType,
-        text: e.target.question.value,
+        text: e.currentTarget.question.value,
       },
-      answer: answer.answerOption,
-      timeLimit: e.target.timeLimit.value,
-      points: e.target.points.value,
+      answers: answer.answerOption,
+      timeLimit: parseInt(e.currentTarget.timeLimit.value),
+      points: parseInt(e.currentTarget.points.value),
       embeds: {
         type: embedType,
-        data: embedType === 'img' ? await fileToDataUrl(e.target.embeds.files[0]) : e.target.embeds.value,
+        data: embedType === ETypeEnum.NIL ? '' : embedType === ETypeEnum.IMG ? await fileToDataUrl(e.currentTarget.embeds.files[0]) : e.currentTarget.embeds.value,
       }
     }
 
-    const idx = quizData.questions.findIndex((q: any) => q.id === question.id?.toString())
+    if (typeof quizData.questions === 'undefined') {
+      return
+    }
+
+    const idx = quizData.questions.findIndex(q => q.id === question.id)
     if (idx !== -1) {
       quizData.questions[idx] = question
     } else {
@@ -156,9 +166,9 @@ const EditQuestion: React.FC = () => {
     const result = Fetcher.put(QUIZ(quizId as string))
       .withLocalStorageToken()
       .withJsonPayload(payload)
-      .fetchResult()
+      .fetchResult() as Promise<IResQuiz>
 
-    result.then((data: any) => {
+    result.then(data => {
       if (data.error) {
         setErrMsg(data.error)
         return
@@ -184,9 +194,9 @@ const EditQuestion: React.FC = () => {
 
         <div>
           <label htmlFor='question-type' className='block mb-1'>Question Type: </label>
-          <select id='question-type' defaultValue={quizType} onChange={(e: any) => setQuizType(e.target.value)} className='border text-sm rounded-lg block w-full p-2.5 bg-[#2c2c2c] border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500'>
-            <option value={'sc'}>Single Choice</option>
-            <option value={'mc'}>Multiple Choice</option>
+          <select id='question-type' defaultValue={quizType} onChange={e => setQuizType(e.target.value as QTypeEnum)} className='border text-sm rounded-lg block w-full p-2.5 bg-[#2c2c2c] border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500'>
+            <option value={QTypeEnum.SC}>Single Choice</option>
+            <option value={QTypeEnum.MC}>Multiple Choice</option>
           </select>
         </div>
 
@@ -206,11 +216,12 @@ const EditQuestion: React.FC = () => {
 
         <div>
           <label htmlFor='embeds' className='block mb-1'>Embeds: </label>
-          <select id='embed-type' defaultValue={embedType} onChange={(e: any) => setEmbedType(e.target.value)} className='border text-sm rounded-lg block w-full p-2.5 bg-[#2c2c2c] border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 mb-2'>
-            <option value={'vid'}>Video</option>
-            <option value={'img'}>Image</option>
+          <select id='embed-type' defaultValue={embedType} onChange={e => setEmbedType(e.target.value as ETypeEnum)} className='border text-sm rounded-lg block w-full p-2.5 bg-[#2c2c2c] border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 mb-2'>
+            <option value={ETypeEnum.NIL}>No Embeds</option>
+            <option value={ETypeEnum.VID}>Video</option>
+            <option value={ETypeEnum.IMG}>Image</option>
           </select>
-          {embedType === 'vid' ? <InputSection type='text' identifier='embeds' placeholder='embeds' /> : <FileInputSection identifier='embeds' />}
+          {embedType !== ETypeEnum.NIL && (embedType === ETypeEnum.VID ? <InputSection type='text' identifier='embeds' placeholder='embeds' /> : <FileInputSection identifier='embeds' />)}
         </div>
 
         <button type='submit' className='mt-2 bg-blue-500 rounded-lg px-2 py-1'>
@@ -222,3 +233,4 @@ const EditQuestion: React.FC = () => {
 }
 
 export default EditQuestion
+export type TAnswerOption = ReturnType<typeof useAnswerOption>

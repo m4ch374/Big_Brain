@@ -3,12 +3,13 @@ import { useInterval } from '../../utils/helpers'
 import { CurrQuestionContext } from './PlayGame'
 import ShowAnswer from './ShowAnswer'
 import ShowQuestion from './ShowQuestion'
+import { TQuestion } from '../../types'
 
-const useCountDown = (question: any) => {
+const useCountDown = (question: TQuestion) => {
   const [countDown, setCountDown] = useState(question?.timeLimit)
 
   useInterval(() => {
-    const timeDiff = Math.floor((Date.now() - new Date(question?.isoTimeLastQuestionStarted).getTime()) / 1000)
+    const timeDiff = Math.floor((Date.now() - new Date(question?.isoTimeLastQuestionStarted as string).getTime()) / 1000)
 
     setCountDown(question?.timeLimit - timeDiff)
   }, 1000)
@@ -19,7 +20,7 @@ const useCountDown = (question: any) => {
 const GameLobby: React.FC = () => {
   const currQuestion = useContext(CurrQuestionContext)
 
-  const countDown = useCountDown(currQuestion)
+  const countDown = useCountDown(currQuestion as TQuestion)
 
   const [timeReached, setTimeReached] = useState(false)
 

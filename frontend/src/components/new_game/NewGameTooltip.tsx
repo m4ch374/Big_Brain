@@ -1,19 +1,24 @@
 import React, { useCallback, useState } from 'react';
 import { NEW_QUIZ } from '../../utils/endpoint';
 import Fetcher from '../../utils/fetcher';
+import { IResErrorable } from '../../types';
 
-// Sigh..... Interface somehow makes esline unhappy
-const NewGameTooltip: React.FC<{ forwardRef: React.LegacyRef<HTMLElement>, setState: Function }> = ({ forwardRef, setState }) => {
+type TNewGameTooltip = {
+  forwardRef: React.LegacyRef<HTMLElement>,
+  setState: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const NewGameTooltip: React.FC<TNewGameTooltip> = ({ forwardRef, setState }) => {
   const [errMsg, setErrMsg] = useState('')
 
   const formSubmit: React.FormEventHandler<HTMLFormElement> = useCallback((e) => {
-    const targetInput: any = e.target
+    const targetInput = e.currentTarget
 
     const result = Fetcher.post(NEW_QUIZ).withLocalStorageToken()
       .withJsonPayload({ name: targetInput.game.value })
-      .fetchResult()
+      .fetchResult() as Promise<IResErrorable>
 
-    result.then((data: any) => {
+    result.then((data) => {
       if (!data.error) {
         setState(false)
       } else {

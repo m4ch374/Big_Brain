@@ -6,13 +6,14 @@ import Delete from './icons/Delete';
 import Edit from './icons/Edit';
 import PlayGameBtn from './PlayGameBtn';
 import StopGameBtn from './StopGameBtn';
+import { IResQuiz, TQuestion, TResQuizMeta } from '../types';
 
-const GameCard: React.FC<{ metaData: any }> = ({ metaData }) => {
-  const [data, setData]: any = useState()
+const GameCard: React.FC<{ metaData: TResQuizMeta }> = ({ metaData }) => {
+  const [data, setData] = useState<IResQuiz>()
   const [deleted, setDeleted] = useState(false)
 
   const deleteBtn = useCallback(() => {
-    const result = Fetcher.delete(QUIZ(metaData.id))
+    const result = Fetcher.delete(QUIZ(metaData.id.toString()))
       .withLocalStorageToken()
       .fetchResult()
 
@@ -30,15 +31,15 @@ const GameCard: React.FC<{ metaData: any }> = ({ metaData }) => {
       return 0
     }
 
-    return data.questions.map((q: any) => parseInt(q.timeLimit)).reduce((acc: number, curr: number) => acc + curr)
+    return data.questions.map((q: TQuestion) => q.timeLimit).reduce((acc: number, curr: number) => acc + curr)
   }, [data])
 
   useEffect(() => {
-    const result = Fetcher.get(QUIZ(metaData.id))
+    const result = Fetcher.get(QUIZ(metaData.id.toString()))
       .withLocalStorageToken()
-      .fetchResult()
+      .fetchResult() as Promise<IResQuiz>
 
-    result.then((resData: any) => {
+    result.then((resData) => {
       setData(resData)
     })
   }, [])
@@ -57,8 +58,8 @@ const GameCard: React.FC<{ metaData: any }> = ({ metaData }) => {
 
           <div className='m-4 mt-0 flex justify-between'>
             <div className='flex gap-3'>
-              <PlayGameBtn quizId={metaData.id} />
-              <StopGameBtn quizId={metaData.id} />
+              <PlayGameBtn quizId={metaData.id.toString()} />
+              <StopGameBtn quizId={metaData.id.toString()} />
             </div>
             <div className='flex gap-3'>
               <Link to={`/quiz/${metaData.id}`}>

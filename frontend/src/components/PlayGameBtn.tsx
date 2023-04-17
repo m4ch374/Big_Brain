@@ -5,6 +5,7 @@ import Clipboard from './icons/Clipboard';
 import Cross from './icons/Cross';
 import Play from './icons/Play';
 import PopupTemplate from './popups/PopupTemplate';
+import { IResErrorable, IResQuiz } from '../types';
 
 const PlayGameBtn: React.FC<{ quizId: string }> = ({ quizId }) => {
   const [startPopup, setStartPopup] = useState(false)
@@ -13,21 +14,21 @@ const PlayGameBtn: React.FC<{ quizId: string }> = ({ quizId }) => {
   const startGame = useCallback(async () => {
     setStartPopup(true)
 
-    const startResult: any = await Fetcher.post(START_QUIZ(quizId))
+    const startResult = await Fetcher.post(START_QUIZ(quizId))
       .withLocalStorageToken()
-      .fetchResult()
+      .fetchResult() as Promise<IResErrorable>
 
-    if (startResult.error) {
+    if ((await startResult).error) {
       setClipboard('Quiz active')
       return
     }
 
-    const result: any = await Fetcher.get(QUIZ(quizId))
+    const result = await Fetcher.get(QUIZ(quizId))
       .withLocalStorageToken()
-      .fetchResult()
+      .fetchResult() as IResQuiz
 
-    setClipboard(result.active)
-    localStorage.setItem(quizId, result.active)
+    setClipboard(result.active ? result.active.toString() : '')
+    localStorage.setItem(quizId, result.active ? result.active.toString() : '')
   }, [])
 
   const closePopup = useCallback(() => {

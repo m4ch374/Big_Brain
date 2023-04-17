@@ -7,15 +7,20 @@ import QuestionCard from '../components/QuestionCard';
 import { QUIZ } from '../utils/endpoint';
 import Fetcher from '../utils/fetcher';
 import { fileToDataUrl } from '../utils/helpers';
+import { IResQuiz, TQuestion } from '../types';
 
 const EditQuiz: React.FC = () => {
   const { quizId } = useParams()
-  const [quizData, setQuizData]: any = useState()
-  const [questionsData, setQuestionsData]: any = useState([])
+  const [quizData, setQuizData] = useState<IResQuiz>()
+  const [questionsData, setQuestionsData] = useState<TQuestion[]>([])
   const [errMsg, setErrMsg] = useState('')
 
-  const removeQuestion = useCallback((qId: string) => {
-    const newQuestionSet = quizData ? quizData.questions.filter((q: any) => q.id !== qId) : []
+  const removeQuestion = useCallback((qId: number) => {
+    if (!quizData) {
+      return
+    }
+
+    const newQuestionSet = quizData.questions ? quizData.questions.filter((q: TQuestion) => q.id !== qId) : []
     quizData.questions = newQuestionSet
     setQuizData(quizData)
     setQuestionsData(newQuestionSet)
@@ -33,11 +38,11 @@ const EditQuiz: React.FC = () => {
   useEffect(() => {
     const result = Fetcher.get(QUIZ(quizId as string))
       .withLocalStorageToken()
-      .fetchResult()
+      .fetchResult() as Promise<IResQuiz>
 
-    result.then((data: any) => {
+    result.then((data) => {
       setQuizData(data)
-      setQuestionsData(data.questions)
+      setQuestionsData(data.questions as TQuestion[])
     })
   }, [])
 
@@ -46,25 +51,26 @@ const EditQuiz: React.FC = () => {
       return 0
     }
 
-    return Math.max(...questionsData.map((q: any) => parseInt(q.id))) + 1
+    return Math.max(...questionsData.map(q => q.id)) + 1
   }, [quizData, questionsData])
 
-  const submitForm = useCallback((e: any) => {
+  const submitForm: React.FormEventHandler<HTMLFormElement> = useCallback(e => {
     e.preventDefault()
 
     try {
-      fileToDataUrl(e.target.file?.files[0])
+      const quizName = e.currentTarget.quizName.value
+      fileToDataUrl(e.currentTarget.file?.files[0])
         .then((url) => {
           const result = Fetcher.put(QUIZ(quizId as string))
             .withLocalStorageToken()
             .withJsonPayload({
               questions: questionsData,
-              name: e.target.name.value,
+              name: quizName,
               thumbnail: url
             })
-            .fetchResult()
+            .fetchResult() as Promise<IResQuiz>
 
-          result.then((data: any) => {
+          result.then(data => {
             if (data.error) {
               setErrMsg(data.error)
             }
@@ -72,7 +78,7 @@ const EditQuiz: React.FC = () => {
             setErrMsg('')
           })
         })
-    } catch (e: any) {
+    } catch (e) {
       console.log(e)
       setErrMsg('Unsupported file type')
     }
@@ -88,8 +94,8 @@ const EditQuiz: React.FC = () => {
 
       <form onSubmit={submitForm} className='text-xl flex flex-col gap-3'>
         <div>
-          <label htmlFor='name' className='block mb-1'>Name: </label>
-          <InputSection type='text' identifier='name' placeholder={quizData?.name} />
+          <label htmlFor='quizName' className='block mb-1'>Name: </label>
+          <InputSection type='text' identifier='quizName' placeholder={quizData?.name as string} />
         </div>
 
         <div>
@@ -112,7 +118,7 @@ const EditQuiz: React.FC = () => {
       <hr className='h-px m-0 p-0 bg-gray-500 border-0' />
 
       <div className='flex flex-col justify-center mt-3 gap-5'>
-        {questionsData.map((q: any) => {
+        {questionsData.map(q => {
           return <QuestionCard key={q.id} quesiton={q} removeQuestion={removeQuestion} />
         })}
       </div>

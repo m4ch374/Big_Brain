@@ -2,10 +2,15 @@ import React, { useCallback, useState } from 'react';
 import Check from '../icons/Check';
 import Delete from '../icons/Delete';
 
-const AnswerInput: React.FC<{ setShow: Function, appendFnc: Function }> = ({ setShow, appendFnc }) => {
+type TAnswerInput = {
+  setShow: React.Dispatch<React.SetStateAction<boolean>>,
+  appendFnc: (ans: string) => void
+}
+
+const AnswerInput: React.FC<TAnswerInput> = ({ setShow, appendFnc }) => {
   const [input, setInput] = useState('')
 
-  const addAnswer = useCallback((e: any) => {
+  const addAnswer = useCallback(() => {
     setShow(false)
     appendFnc(input)
   }, [input])
@@ -13,7 +18,21 @@ const AnswerInput: React.FC<{ setShow: Function, appendFnc: Function }> = ({ set
   return (
     <div className='flex justify-between pl-1 py-1 rounded hover:bg-[#4c4c4c] w-full'>
         <div className='flex items-center'>
-          <input type='text' onChange={(e) => setInput(e.target.value)} placeholder='New answer' aria-details='new answer input' className='border rounded border-gray-700 bg-[#2c2c2c] w-full ml-2 pl-1 text-md font-medium text-gray-300' />
+          <input
+            type='text'
+            onChange={(e) => setInput(e.target.value)}
+            placeholder='New answer' aria-details='new answer input'
+            className='border
+              rounded
+              border-gray-700
+              bg-[#2c2c2c]
+              w-full
+              ml-2
+              pl-1
+              text-md
+              font-medium
+              text-gray-300'
+            />
         </div>
 
         <div className='flex items-center mr-4 gap-4'>

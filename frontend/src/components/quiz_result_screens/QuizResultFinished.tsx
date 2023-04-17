@@ -6,21 +6,22 @@ import AnswerSubmitted from './result_metric/AnswerSubmitted'
 import AverageTime from './result_metric/AverageTime'
 import CorrectRate from './result_metric/CorrectRate'
 import TopPlayers from './result_metric/TopPlayers'
+import { IResResult, TResResult } from '../../types'
 
-const ResultsContext = createContext([])
+const ResultsContext = createContext<TResResult[]>([])
 
 const QuizResultFinished: React.FC = () => {
   const { sessionId } = useParams()
 
-  const [results, setResults] = useState<any>([])
+  const [results, setResults] = useState<TResResult[]>([])
 
   useEffect(() => {
     const result = Fetcher.get(SESSION_RESULT(sessionId as string))
       .withLocalStorageToken()
-      .fetchResult()
+      .fetchResult() as Promise<IResResult>
 
-    result.then((data: any) => {
-      setResults(data.results)
+    result.then(data => {
+      setResults(data.results as TResResult[])
     })
   }, [])
 

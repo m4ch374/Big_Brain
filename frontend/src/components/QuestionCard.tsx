@@ -2,8 +2,14 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Delete from './icons/Delete';
 import Edit from './icons/Edit';
+import { TQuestion } from '../types';
 
-const QuestionCard: React.FC<{ quesiton: any, removeQuestion: Function }> = ({ quesiton, removeQuestion }) => {
+type TQuestionCard = {
+  quesiton: TQuestion,
+  removeQuestion: (a: number) => void
+}
+
+const QuestionCard: React.FC<TQuestionCard> = ({ quesiton, removeQuestion }) => {
   const { quizId } = useParams()
 
   return (

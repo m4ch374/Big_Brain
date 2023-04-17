@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LOGIN, REGISTER } from '../utils/endpoint';
 import Fetcher from '../utils/fetcher';
+import { IResAuth } from '../types';
 
 const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
   const navigate = useNavigate()
@@ -10,7 +11,7 @@ const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
   const submission: React.FormEventHandler<HTMLFormElement> = useCallback((e) => {
     e.preventDefault()
 
-    const formInput = e.target as any
+    const formInput = e.currentTarget
 
     const emailInput = formInput.email.value
     const passwordInput = formInput.password.value
@@ -23,13 +24,13 @@ const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
     }
 
     const endpoint = isLogin ? LOGIN : REGISTER
-    const result = Fetcher.post(endpoint).withJsonPayload(payload).fetchResult()
+    const result = Fetcher.post(endpoint).withJsonPayload(payload).fetchResult() as Promise<IResAuth>
 
-    result.then((data: any) => {
+    result.then((data) => {
       if (data.error) {
         setErrorMsg(data.error)
       } else {
-        localStorage.setItem('token', data.token)
+        localStorage.setItem('token', data.token as string)
         navigate('/')
       }
     })

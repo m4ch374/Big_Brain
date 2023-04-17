@@ -3,7 +3,11 @@ import { SERVER_ROUTE } from './endpoint';
 
 class Fetcher {
   path: string
-  option: any // too lazy to type everything out
+  option: {
+    method?: string,
+    headers?: object,
+    body?: string
+  }
 
   constructor (httpMethod: string, path: string) {
     this.path = SERVER_ROUTE + path;
@@ -41,7 +45,7 @@ class Fetcher {
 
   fetchResult () {
     return new Promise((resolve, reject) => {
-      fetch(this.path, this.option)
+      fetch(this.path, this.option as RequestInit)
         .then(res => res.json())
         .then(data => resolve(data))
         .catch(e => reject(e));

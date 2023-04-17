@@ -3,15 +3,20 @@ import GameCard from '../components/GameCard';
 import NewGameBtn from '../components/new_game/NewGameBtn';
 import { QUIZZES } from '../utils/endpoint';
 import Fetcher from '../utils/fetcher';
+import { IResQuizMeta, TResQuizMeta } from '../types';
 
 const Dashboard: React.FC = () => {
-  const [metaData, setMetaData] = useState([])
+  const [metaData, setMetaData] = useState<TResQuizMeta[]>([])
 
   useEffect(() => {
-    const result = Fetcher.get(QUIZZES).withLocalStorageToken().fetchResult()
+    const result = Fetcher.get(QUIZZES).withLocalStorageToken().fetchResult() as Promise<IResQuizMeta>
 
-    result.then((data: any) => {
+    result.then(data => {
       if (data.error) {
+        return
+      }
+
+      if (typeof data.quizzes === 'undefined') {
         return
       }
 
@@ -30,7 +35,7 @@ const Dashboard: React.FC = () => {
         <hr className='h-px my-2 bg-gray-500 border-0' />
 
         <div className='flex flex-wrap gap-5 justify-center'>
-          {metaData?.map((d: any) => {
+          {metaData?.map(d => {
             return <GameCard key={d.id} metaData={d} />
           })}
         </div>

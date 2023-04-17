@@ -2,8 +2,14 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ADVANCE_QUIZ, END_QUIZ } from '../../utils/endpoint'
 import Fetcher from '../../utils/fetcher'
+import { TResStatusResult } from '../../types'
 
-const QuizResultActive: React.FC<{ sessionState: any, setActive: any }> = ({ sessionState, setActive }) => {
+type TQuizResultActive = {
+  sessionState: TResStatusResult,
+  setActive: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const QuizResultActive: React.FC<TQuizResultActive> = ({ sessionState, setActive }) => {
   const { sessionId } = useParams()
   const quizId = useRef(-1)
   const [currPos, setCurrPos] = useState(-1)
@@ -28,7 +34,9 @@ const QuizResultActive: React.FC<{ sessionState: any, setActive: any }> = ({ ses
       return 'Quiz ended'
     }
 
-    return sessionState.questions[currPos].question.text
+    // An error that i dont know how to fix, despite checking for null and udnefined
+    // eslint-disable-next-line
+    return sessionState.questions[currPos]!.question.text
   }, [currPos])
 
   const proceedBtn = useCallback(async () => {

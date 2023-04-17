@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 // From assignment 3
-export function fileToDataUrl (file: any) {
+export function fileToDataUrl (file: Blob) {
   const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg']
   const valid = validFileTypes.find(type => type === file.type);
   // Bad data, let's walk away.
@@ -18,7 +18,7 @@ export function fileToDataUrl (file: any) {
   return dataUrlPromise;
 }
 
-export const useInterval = (callback: Function, delay: number) => {
+export const useInterval = (callback: () => void, delay: number) => {
   useEffect(() => {
     callback()
 

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import Plus from '../icons/Plus';
 import AnswerInput from './AnswerInput';
 import AnswerOption from './AnswerOption';
+import { TAnswerDetails } from '../../types';
+import { TAnswerOption } from '../../pages/EditQuestion';
 
-// Cant type any interface cuz it will make eslint unhappy
-const AnswerSection: React.FC<{ answerState: any }> = ({ answerState }) => {
+const AnswerSection: React.FC<{ answerState: TAnswerOption }> = ({ answerState }) => {
   const [newAnswer, setNewAnswer] = useState(false)
 
   return (
@@ -20,9 +21,9 @@ const AnswerSection: React.FC<{ answerState: any }> = ({ answerState }) => {
       <div className='flex flex-col justify-start mt-4'>
         {newAnswer && <AnswerInput setShow={setNewAnswer} appendFnc={answerState.appendAnswer} />}
 
-        {answerState.answerOption.map((a: any, idx: any) => {
+        {answerState.answerOption.map((a: TAnswerDetails, idx: number) => {
           return (
-            <AnswerOption key={idx} ans={a} removeFnc={answerState.removeAnswer} setAns={answerState.setAnswer} />
+            <AnswerOption key={idx as React.Key} ans={a} removeFnc={answerState.removeAnswer} setAns={answerState.setAnswer} />
           )
         })}
       </div>

@@ -6,22 +6,23 @@ import { useInterval } from '../../utils/helpers'
 import FinishScreen from './FinishScreen'
 import GameLobby from './GameLobby'
 import WaitingLobby from './WaitingLobby'
+import { IPlayerQuestion, IPlayerStatus, TQuestion } from '../../types'
 
-const CurrQuestionContext = createContext(null)
+const CurrQuestionContext = createContext<TQuestion | null>(null)
 
 const PlayGame: React.FC = () => {
   const usrId = useContext(UserIdContext).toString()
 
   const [started, setStarted] = useState(false)
   const [ended, setEnded] = useState(false)
-  const [question, setQuestion]: any = useState()
+  const [question, setQuestion] = useState<TQuestion>()
 
   useInterval(async () => {
     if (ended) {
       return
     }
 
-    const isStarted: any = await Fetcher.get(PLAYER_SESSION_STATUS(usrId)).fetchResult()
+    const isStarted = await Fetcher.get(PLAYER_SESSION_STATUS(usrId)).fetchResult() as IPlayerStatus
 
     if (isStarted.error) {
       setEnded(true)
@@ -33,14 +34,14 @@ const PlayGame: React.FC = () => {
       return
     }
 
-    const result: any = await Fetcher.get(QUESTION(usrId)).fetchResult()
+    const result = await Fetcher.get(QUESTION(usrId)).fetchResult() as IPlayerQuestion
     if (result.question) {
       setQuestion(result.question)
     }
   }, 1000)
 
   return (
-    <CurrQuestionContext.Provider value={question}>
+    <CurrQuestionContext.Provider value={question as TQuestion}>
       {ended
         ? <FinishScreen />
         : started ? <GameLobby /> : <WaitingLobby />}
