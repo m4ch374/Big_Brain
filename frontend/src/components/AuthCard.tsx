@@ -37,20 +37,71 @@ const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
   }, [])
 
   return (
-    <div className='bg-slate-50 text-gray-900 min-w-[250px] w-[30%] max-w-[500px] flex flex-col justify-center p-4 rounded-lg'>
-      <h1 className='font-bold text-3xl place-self-center'>{isLogin ? 'Login' : 'Register'}</h1>
+    <div className='bg-slate-50
+      text-gray-900
+      min-w-[250px]
+      w-[30%]
+      max-w-[500px]
+      flex
+      flex-col
+      justify-center
+      p-4
+      rounded-lg'
+    >
+      <h1 className='font-bold text-3xl place-self-center'>
+        {isLogin ? 'Login' : 'Register'}
+      </h1>
 
       <form onSubmit={submission} className='flex flex-col'>
         <label htmlFor='email'>Email:</label>
-        <input type='email' id='email' name='email' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-1.5 mb-3' />
+        <input
+          type='email'
+          id='email'
+          name='email'
+          className='bg-gray-50
+            border
+            border-gray-300
+            text-gray-900
+            text-sm
+            rounded-lg
+            w-full
+            p-1.5
+            mb-3'
+        />
 
         <label htmlFor='password'>Password:</label>
-        <input type='password' id='password' name='password' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-1.5 mb-3' />
+        <input
+          type='password'
+          id='password'
+          name='password'
+          className='bg-gray-50
+            border
+            border-gray-300
+            text-gray-900
+            text-sm
+            rounded-lg
+            w-full
+            p-1.5
+            mb-3'
+        />
 
         {!isLogin &&
           <>
             <label htmlFor="usrName">Name:</label>
-            <input type='text' id='usrName' name='usrName' className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-1.5 mb-3' />
+            <input
+              type='text'
+              id='usrName'
+              name='usrName'
+              className='bg-gray-50
+                border
+                border-gray-300
+                text-gray-900
+                text-sm
+                rounded-lg
+                w-full
+                p-1.5
+                mb-3'
+            />
           </>
         }
 

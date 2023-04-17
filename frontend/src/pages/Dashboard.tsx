@@ -9,7 +9,8 @@ const Dashboard: React.FC = () => {
   const [metaData, setMetaData] = useState<TResQuizMeta[]>([])
 
   useEffect(() => {
-    const result = Fetcher.get(QUIZZES).withLocalStorageToken().fetchResult() as Promise<IResQuizMeta>
+    const result = Fetcher.get(QUIZZES).withLocalStorageToken()
+      .fetchResult() as Promise<IResQuizMeta>
 
     result.then(data => {
       if (data.error) {

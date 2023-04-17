@@ -26,7 +26,16 @@ const TopPlayers: React.FC<{ topN: number }> = ({ topN }) => {
         </div>
         {sorted.map((r: TResResult, idx: number) => {
           return (
-            <div key={idx as React.Key} className='grid grid-cols-[1fr_3fr] justify-items-stretch py-2 my-1 hover:bg-[#2c2c2c] rounded-md'>
+            <div
+              key={idx as React.Key}
+              className='grid
+                grid-cols-[1fr_3fr]
+                justify-items-stretch
+                py-2
+                my-1
+                hover:bg-[#2c2c2c]
+                rounded-md'
+            >
               <h3 className='text-center border-r border-gray-400/80'>{r.name}</h3>
               <h3 className='text-center'>{usrNumCorrect(r.answers)}</h3>
             </div>

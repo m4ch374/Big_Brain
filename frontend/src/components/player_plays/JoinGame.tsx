@@ -5,7 +5,11 @@ import Fetcher from '../../utils/fetcher'
 import InputSection from '../inputs/InputSection'
 import { IPlayerJoin } from '../../types'
 
-const JoinGame: React.FC<{ setId: React.Dispatch<React.SetStateAction<number>> }> = ({ setId }) => {
+type TJoinGame = {
+  setId: React.Dispatch<React.SetStateAction<number>>
+}
+
+const JoinGame: React.FC<TJoinGame> = ({ setId }) => {
   const { sessionId } = useParams()
   const [errMsg, setErrMsg] = useState('')
 

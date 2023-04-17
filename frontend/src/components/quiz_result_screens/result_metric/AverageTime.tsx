@@ -41,8 +41,10 @@ const AverageTime: React.FC = () => {
     for (let i = 0; i < results[0]!.answers.length; i++) {
       let numAnswered = 0
       const timeTaken = results.reduce((acc: number, curr: TResResult) => {
-        // eslint-disable-next-line
-        const timeDiff = new Date(curr.answers[i]!.answeredAt).getTime() - new Date(curr.answers[i]!.questionStartedAt).getTime()
+        /* eslint-disable */
+        const timeDiff = new Date(curr.answers[i]!.answeredAt).getTime() -
+          new Date(curr.answers[i]!.questionStartedAt).getTime()
+        /* eslint-disable */
 
         if (timeDiff !== 0) {
           numAnswered++

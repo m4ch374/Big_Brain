@@ -28,17 +28,28 @@ const NewGameTooltip: React.FC<TNewGameTooltip> = ({ forwardRef, setState }) => 
   }, [])
 
   return (
-    <aside ref={forwardRef} className='absolute z-10 right-[12%] top-[110px] bg-white text-gray-900 w-[200px] p-2 rounded-lg'>
-      <form className='flex flex-col' onSubmit={formSubmit}>
-        <label htmlFor='game'>Create New Game</label>
-        <input id='game' name='game' type='text' placeholder='My new game' className='border-[1px] py-1 rounded-md mt-2 pl-1'></input>
+    <aside
+      ref={forwardRef}
+      className='absolute
+        z-10
+        right-[12%]
+        top-[110px]
+        bg-white
+        text-gray-900
+        w-[200px]
+        p-2
+        rounded-lg'
+      >
+        <form className='flex flex-col' onSubmit={formSubmit}>
+          <label htmlFor='game'>Create New Game</label>
+          <input id='game' name='game' type='text' placeholder='My new game' className='border-[1px] py-1 rounded-md mt-2 pl-1'></input>
 
-        {errMsg !== '' && <label className='text-sm text-red-500 mt-1'>{errMsg}</label>}
+          {errMsg !== '' && <label className='text-sm text-red-500 mt-1'>{errMsg}</label>}
 
-        <button type='submit' className='p-1 bg-blue-500 rounded-lg mt-2 place-self-end text-white'>
-          Create
-        </button>
-      </form>
+          <button type='submit' className='p-1 bg-blue-500 rounded-lg mt-2 place-self-end text-white'>
+            Create
+          </button>
+        </form>
     </aside>
   )
 }

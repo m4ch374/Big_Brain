@@ -22,7 +22,8 @@ const PlayGame: React.FC = () => {
       return
     }
 
-    const isStarted = await Fetcher.get(PLAYER_SESSION_STATUS(usrId)).fetchResult() as IPlayerStatus
+    const isStarted = await Fetcher.get(PLAYER_SESSION_STATUS(usrId))
+      .fetchResult() as IPlayerStatus
 
     if (isStarted.error) {
       setEnded(true)

@@ -20,7 +20,10 @@ const EditQuiz: React.FC = () => {
       return
     }
 
-    const newQuestionSet = quizData.questions ? quizData.questions.filter((q: TQuestion) => q.id !== qId) : []
+    const newQuestionSet = quizData.questions
+      ? quizData.questions.filter((q: TQuestion) => q.id !== qId)
+      : []
+
     quizData.questions = newQuestionSet
     setQuizData(quizData)
     setQuestionsData(newQuestionSet)

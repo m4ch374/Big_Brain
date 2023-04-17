@@ -9,7 +9,8 @@ const useCountDown = (question: TQuestion) => {
   const [countDown, setCountDown] = useState(question?.timeLimit)
 
   useInterval(() => {
-    const timeDiff = Math.floor((Date.now() - new Date(question?.isoTimeLastQuestionStarted as string).getTime()) / 1000)
+    const timeDiff = Math.floor((Date.now() -
+      new Date(question?.isoTimeLastQuestionStarted as string).getTime()) / 1000)
 
     setCountDown(question?.timeLimit - timeDiff)
   }, 1000)

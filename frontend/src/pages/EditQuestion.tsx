@@ -142,7 +142,11 @@ const EditQuestion: React.FC = () => {
       points: parseInt(e.currentTarget.points.value),
       embeds: {
         type: embedType,
-        data: embedType === ETypeEnum.NIL ? '' : embedType === ETypeEnum.IMG ? await fileToDataUrl(e.currentTarget.embeds.files[0]) : e.currentTarget.embeds.value,
+        data: embedType === ETypeEnum.NIL
+          ? ''
+          : embedType === ETypeEnum.IMG
+            ? await fileToDataUrl(e.currentTarget.embeds.files[0])
+            : e.currentTarget.embeds.value,
       }
     }
 
@@ -194,7 +198,23 @@ const EditQuestion: React.FC = () => {
 
         <div>
           <label htmlFor='question-type' className='block mb-1'>Question Type: </label>
-          <select id='question-type' defaultValue={quizType} onChange={e => setQuizType(e.target.value as QTypeEnum)} className='border text-sm rounded-lg block w-full p-2.5 bg-[#2c2c2c] border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500'>
+          <select
+            id='question-type'
+            defaultValue={quizType}
+            onChange={e => setQuizType(e.target.value as QTypeEnum)}
+            className='border
+              text-sm
+              rounded-lg
+              block
+              w-full
+              p-2.5
+              bg-[#2c2c2c]
+              border-gray-600
+              placeholder-gray-400
+              text-white
+              focus:ring-blue-500
+              focus:border-blue-500'
+          >
             <option value={QTypeEnum.SC}>Single Choice</option>
             <option value={QTypeEnum.MC}>Multiple Choice</option>
           </select>
@@ -205,7 +225,9 @@ const EditQuestion: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor='timeLimit' className='block mb-1'>Time Limit: (in seconds) </label>
+          <label htmlFor='timeLimit' className='block mb-1'>
+            Time Limit: (in seconds)
+          </label>
           <InputSection type='text' identifier='timeLimit' placeholder='Time limit' />
         </div>
 
@@ -216,12 +238,33 @@ const EditQuestion: React.FC = () => {
 
         <div>
           <label htmlFor='embeds' className='block mb-1'>Embeds: </label>
-          <select id='embed-type' defaultValue={embedType} onChange={e => setEmbedType(e.target.value as ETypeEnum)} className='border text-sm rounded-lg block w-full p-2.5 bg-[#2c2c2c] border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 mb-2'>
+          <select
+            id='embed-type'
+            defaultValue={embedType}
+            onChange={e => setEmbedType(e.target.value as ETypeEnum)}
+            className='border
+              text-sm
+              rounded-lg
+              block
+              w-full
+              p-2.5
+              bg-[#2c2c2c]
+              border-gray-600
+              placeholder-gray-400
+              text-white
+              focus:ring-blue-500
+              focus:border-blue-500 mb-2'
+          >
             <option value={ETypeEnum.NIL}>No Embeds</option>
             <option value={ETypeEnum.VID}>Video</option>
             <option value={ETypeEnum.IMG}>Image</option>
           </select>
-          {embedType !== ETypeEnum.NIL && (embedType === ETypeEnum.VID ? <InputSection type='text' identifier='embeds' placeholder='embeds' /> : <FileInputSection identifier='embeds' />)}
+          {
+            embedType !== ETypeEnum.NIL &&
+              (embedType === ETypeEnum.VID
+                ? <InputSection type='text' identifier='embeds' placeholder='embeds' />
+                : <FileInputSection identifier='embeds' />)
+          }
         </div>
 
         <button type='submit' className='mt-2 bg-blue-500 rounded-lg px-2 py-1'>

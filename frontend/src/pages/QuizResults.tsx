@@ -44,7 +44,10 @@ const QuizResults: React.FC = () => {
 
       <hr className='h-px my-2 bg-gray-500 border-0' />
 
-      {!loading && (isActive ? <QuizResultActive sessionState={sessionState.current as TResStatusResult} setActive={setIsActive} /> : <QuizResultFinished />)}
+      {!loading &&
+        (isActive
+          ? <QuizResultActive sessionState={sessionState.current as TResStatusResult} setActive={setIsActive} />
+          : <QuizResultFinished />)}
     </div>
   )
 }

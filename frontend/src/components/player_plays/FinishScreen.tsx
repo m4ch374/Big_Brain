@@ -3,7 +3,7 @@ import { UserIdContext } from '../../pages/PlaySession'
 import { QUIZ_RESULTS } from '../../utils/endpoint'
 import Fetcher from '../../utils/fetcher'
 import AnswerCard from './AnswerCard'
-import { IResErrorable, TResPlayerResult } from '../../types'
+import { TResPlayerResult } from '../../types'
 
 const FinishScreen: React.FC = () => {
   const usrId = useContext(UserIdContext)

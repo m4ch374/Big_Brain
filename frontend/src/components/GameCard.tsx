@@ -31,7 +31,8 @@ const GameCard: React.FC<{ metaData: TResQuizMeta }> = ({ metaData }) => {
       return 0
     }
 
-    return data.questions.map((q: TQuestion) => q.timeLimit).reduce((acc: number, curr: number) => acc + curr)
+    return data.questions.map((q: TQuestion) => q.timeLimit)
+      .reduce((acc: number, curr: number) => acc + curr)
   }, [data])
 
   useEffect(() => {

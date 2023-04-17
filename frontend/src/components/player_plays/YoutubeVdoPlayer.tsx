@@ -23,7 +23,12 @@ const YoutubeVideoPlayer: React.FC<{ data: string }> = ({ data }) => {
   const [width, height] = useChangeVideoDimension()
 
   return (
-    <YouTubePlayer url={data} className='aspect-video' width={width as number} height={height as number} />
+    <YouTubePlayer
+      url={data}
+      className='aspect-video'
+      width={width as number}
+      height={height as number}
+    />
   )
 }
 

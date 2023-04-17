@@ -51,7 +51,12 @@ const PlayGameBtn: React.FC<{ quizId: string }> = ({ quizId }) => {
             </button>
           </div>
           <div className='border border-gray-400 w-full flex justify-between rounded-md mb-2'>
-            <input type='text' placeholder={clipboard} disabled aria-label='session id' className='h-full p-1 w-full rounded-md' />
+            <input
+              type='text'
+              placeholder={clipboard}
+              disabled aria-label='session id'
+              className='h-full p-1 w-full rounded-md'
+            />
             <button aria-label='copy id' onClick={copyClipboard} className='px-2 bg-gray-300 rounded-r-md'>
               <Clipboard />
             </button>
