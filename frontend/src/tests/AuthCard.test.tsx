@@ -1,3 +1,5 @@
+// Wacky and hacky code towards the end
+
 import React from 'react'
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import AuthCard from '../components/AuthCard'
@@ -5,7 +7,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import { checkNavRender } from './NavBar.test'
 
-const TestingComponent: React.FC<{ initialEntry?: string }> = ({ initialEntry='/' }) => {
+const TestingComponent: React.FC<{ initialEntry?: string }> = ({ initialEntry = '/' }) => {
   return (
     <MemoryRouter initialEntries={[initialEntry]} >
       <Routes>
@@ -111,14 +113,14 @@ describe('Able to do basic auth functions', () => {
     const passwordInput = screen.getByLabelText('password-input')
     const userInput = screen.getByLabelText('username-input')
 
-    fireEvent.change(emailInput, { target: { value: credential} })
+    fireEvent.change(emailInput, { target: { value: credential } })
     fireEvent.change(passwordInput, { target: { value: credential } })
     fireEvent.change(userInput, { target: { value: credential } })
 
     const goBtn = screen.getByRole('button', { name: 'Go' })
-    await act(async() => {
+    await act(async () => {
       fireEvent.click(goBtn)
-      await new Promise(r => setTimeout(r, 100))
+      await new Promise(resolve => setTimeout(resolve, 100))
     })
 
     checkNavRender()
@@ -130,13 +132,13 @@ describe('Able to do basic auth functions', () => {
     const emailInput = screen.getByLabelText('email-input')
     const passwordInput = screen.getByLabelText('password-input')
 
-    fireEvent.change(emailInput, { target: { value: credential} })
+    fireEvent.change(emailInput, { target: { value: credential } })
     fireEvent.change(passwordInput, { target: { value: credential } })
 
     const goBtn = screen.getByRole('button', { name: 'Go' })
-    await act(async() => {
+    await act(async () => {
       fireEvent.click(goBtn)
-      await new Promise(r => setTimeout(r, 100))
+      await new Promise(resolve => setTimeout(resolve, 100))
     })
 
     checkNavRender()
@@ -151,14 +153,14 @@ describe('Handles erros', () => {
     const passwordInput = screen.getByLabelText('password-input')
 
     const credential = 'aaaaa'
-    fireEvent.change(emailInput, { target: { value: credential} })
+    fireEvent.change(emailInput, { target: { value: credential } })
     fireEvent.change(passwordInput, { target: { value: credential } })
 
     const goBtn = screen.getByRole('button', { name: 'Go' })
 
     await act(async () => {
       fireEvent.click(goBtn)
-      await new Promise(r => setTimeout(r, 100))
+      await new Promise(resolve => setTimeout(resolve, 100))
       const errOutput = screen.getByTestId('error-msg')
       expect(errOutput).toBeInTheDocument()
     })
@@ -171,14 +173,14 @@ describe('Handles erros', () => {
     const passwordInput = screen.getByLabelText('password-input')
     const userInput = screen.getByLabelText('username-input')
 
-    fireEvent.change(emailInput, { target: { value: credential} })
+    fireEvent.change(emailInput, { target: { value: credential } })
     fireEvent.change(passwordInput, { target: { value: credential } })
     fireEvent.change(userInput, { target: { value: credential } })
 
     const goBtn = screen.getByRole('button', { name: 'Go' })
-    await act(async() => {
+    await act(async () => {
       fireEvent.click(goBtn)
-      await new Promise(r => setTimeout(r, 100))
+      await new Promise(resolve => setTimeout(resolve, 100))
       const errOutput = screen.getByTestId('error-msg')
       expect(errOutput).toBeInTheDocument()
     })
