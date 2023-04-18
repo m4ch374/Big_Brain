@@ -4,6 +4,12 @@ import { LOGIN, REGISTER } from '../utils/endpoint';
 import Fetcher from '../utils/fetcher';
 import { IResAuth } from '../types';
 
+interface FormInput extends HTMLFormControlsCollection {
+  email: HTMLInputElement,
+  password: HTMLInputElement,
+  usrName: HTMLInputElement,
+}
+
 const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
   const navigate = useNavigate()
   const [errorMsg, setErrorMsg] = useState('')
@@ -11,7 +17,7 @@ const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
   const submission: React.FormEventHandler<HTMLFormElement> = useCallback((e) => {
     e.preventDefault()
 
-    const formInput = e.currentTarget
+    const formInput = e.currentTarget.elements as FormInput
 
     const emailInput = formInput.email.value
     const passwordInput = formInput.password.value
@@ -58,6 +64,7 @@ const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
           type='email'
           id='email'
           name='email'
+          aria-label='email-input'
           className='bg-gray-50
             border
             border-gray-300
@@ -74,6 +81,7 @@ const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
           type='password'
           id='password'
           name='password'
+          aria-label='password-input'
           className='bg-gray-50
             border
             border-gray-300
@@ -92,6 +100,7 @@ const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
               type='text'
               id='usrName'
               name='usrName'
+              aria-label='username-input'
               className='bg-gray-50
                 border
                 border-gray-300
@@ -105,8 +114,12 @@ const AuthCard: React.FC<{ isLogin: boolean }> = ({ isLogin }) => {
           </>
         }
 
-        {errorMsg !== '' && <label className='text-sm text-red-500 mb-2'>{errorMsg}</label>}
-        <Link to={isLogin ? '/register' : '/login'} className='text-sm underline text-blue-600 mb-2'>
+        {errorMsg !== '' && <label className='text-sm text-red-500 mb-2' data-testid='error-msg'>{errorMsg}</label>}
+        <Link
+          to={isLogin ? '/register' : '/login'}
+          className='text-sm underline text-blue-600 mb-2'
+          aria-label='change-mode'
+        >
           {isLogin ? 'No account? Register Here!' : 'Have an account? Login Here!'}
         </Link>
 

@@ -13,6 +13,7 @@ const AnswerOption: React.FC<TAnswerOption> = ({ ans, removeFnc, setAns }) => {
     <div className='flex items-center pl-4 rounded hover:bg-[#3c3c3c]'>
         <input
           id={`check-${ans.id}`}
+          data-testid={`check-${ans.id}`}
           defaultChecked={ans.isAns}
           name={`check-${ans.id}`}
           onChange={(e) => setAns(ans.id, e.target.checked)}
@@ -32,7 +33,12 @@ const AnswerOption: React.FC<TAnswerOption> = ({ ans, removeFnc, setAns }) => {
           {ans.text}
         </label>
 
-        <button type='button' className='text-red-500 mr-4' onClick={() => removeFnc(ans.id)}>
+        <button
+          aria-label={`discard-${ans.id}`}
+          type='button'
+          className='text-red-500 mr-4'
+          onClick={() => removeFnc(ans.id)}
+        >
           <Delete />
         </button>
     </div>

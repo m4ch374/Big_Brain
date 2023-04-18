@@ -21,7 +21,8 @@ const AnswerInput: React.FC<TAnswerInput> = ({ setShow, appendFnc }) => {
           <input
             type='text'
             onChange={(e) => setInput(e.target.value)}
-            placeholder='New answer' aria-details='new answer input'
+            placeholder='New answer'
+            aria-label='new answer input'
             className='border
               rounded
               border-gray-700
@@ -39,7 +40,7 @@ const AnswerInput: React.FC<TAnswerInput> = ({ setShow, appendFnc }) => {
           <button type='button' aria-label='discard answer' onClick={() => setShow(false)} className='text-red-500'>
             <Delete />
           </button>
-          <button type='button' onClick={addAnswer} className='text-green-400'>
+          <button type='button' aria-label='add answer' onClick={addAnswer} className='text-green-400'>
             <Check />
           </button>
         </div>

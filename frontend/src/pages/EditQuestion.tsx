@@ -276,4 +276,5 @@ const EditQuestion: React.FC = () => {
 }
 
 export default EditQuestion
+export { useAnswerOption } // for testing
 export type TAnswerOption = ReturnType<typeof useAnswerOption>
