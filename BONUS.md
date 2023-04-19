@@ -1,0 +1,1 @@
+A custom 404 not found page (though very primitive)

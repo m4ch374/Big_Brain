@@ -1,0 +1,2 @@
+- Dark mode
+- Provide feedback on error (some components)
